@@ -233,6 +233,7 @@ void setup() {
   // Buttons & LED
   pinMode(BUTTON_PIN, INPUT_PULLUP);
   pinMode(LED_PIN, OUTPUT);
+  digitalWrite(LED_PIN,HIGH);
 
   // Hello
   DEBUG_MSG(APP_NAME " " APP_VERSION "\n");

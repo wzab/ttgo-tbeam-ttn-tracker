@@ -62,7 +62,7 @@ void ttn_register(void (*callback)(uint8_t message));
 #define LOGO_DELAY              5000        // Time to show logo on first boot
 #define LORAWAN_PORT            10          // Port the messages will be sent to
 #define LORAWAN_CONFIRMED_EVERY 0           // Send confirmed message every these many messages (0 means never)
-#define LORAWAN_SF              DR_SF7      // Spreading factor
+#define LORAWAN_SF              DR_SF10      // Spreading factor
 #define LORAWAN_ADR             0           // Enable ADR
 #define GPS_WAIT_FOR_LOCK       5000        // Wait 5s after every boot for GPS lock
 
@@ -89,9 +89,9 @@ void ttn_register(void (*callback)(uint8_t message));
 // General
 // -----------------------------------------------------------------------------
 
-#define I2C_SDA         21
-#define I2C_SCL         22
-#define LED_PIN         14
+#define I2C_SDA         4
+#define I2C_SCL         15
+#define LED_PIN         16
 
 #if defined(T_BEAM_V07)
 #define BUTTON_PIN      39
@@ -109,13 +109,13 @@ void ttn_register(void (*callback)(uint8_t message));
 // GPS
 // -----------------------------------------------------------------------------
 
-#define GPS_SERIAL_NUM  1
+#define GPS_SERIAL_NUM  2
 #define GPS_BAUDRATE    9600
 #define USE_GPS         1
 
 #if defined(T_BEAM_V07)
-#define GPS_RX_PIN      12
-#define GPS_TX_PIN      15
+#define GPS_RX_PIN      23
+#define GPS_TX_PIN      19
 #elif defined(T_BEAM_V10)
 #define GPS_RX_PIN      34
 #define GPS_TX_PIN      12
@@ -129,7 +129,7 @@ void ttn_register(void (*callback)(uint8_t message));
 #define MISO_GPIO       19
 #define MOSI_GPIO       27
 #define NSS_GPIO        18
-#define RESET_GPIO      23
+#define RESET_GPIO      14
 #define DIO0_GPIO       26
 #define DIO1_GPIO       33
 #define DIO2_GPIO       32
