@@ -54,11 +54,11 @@ RTC_DATA_ATTR uint32_t count = 0;
 void send() {
   char buffer[40];
   snprintf(buffer, sizeof(buffer), "Latitude: %10.6f\n", gps_latitude());
-  screen_print(buffer);
+  Serial.println(buffer);
   snprintf(buffer, sizeof(buffer), "Longitude: %10.6f\n", gps_longitude());
-  screen_print(buffer);
+  Serial.println(buffer);
   snprintf(buffer, sizeof(buffer), "Error: %4.2fm\n", gps_hdop());
-  screen_print(buffer);
+  Serial.println(buffer);
 
   buildPacket(txBuffer);
 
@@ -80,13 +80,13 @@ void sleep() {
   // Show the going to sleep message on the screen
   char buffer[20];
   snprintf(buffer, sizeof(buffer), "Sleeping in %3.1fs\n", (MESSAGE_TO_SLEEP_DELAY / 1000.0));
-  screen_print(buffer);
+  Serial.println(buffer);
 
   // Wait for MESSAGE_TO_SLEEP_DELAY millis to sleep
   delay(MESSAGE_TO_SLEEP_DELAY);
 
   // Turn off screen
-  screen_off();
+  //screen_off();
 
   // Set the user button to wake the board
   sleep_interrupt(BUTTON_PIN, LOW);
@@ -100,24 +100,24 @@ void sleep() {
 }
 
 void callback(uint8_t message) {
-  if (EV_JOINING == message) screen_print("Joining TTN...\n");
-  if (EV_JOINED == message) screen_print("TTN joined!\n");
-  if (EV_JOIN_FAILED == message) screen_print("TTN join failed\n");
-  if (EV_REJOIN_FAILED == message) screen_print("TTN rejoin failed\n");
-  if (EV_RESET == message) screen_print("Reset TTN connection\n");
-  if (EV_LINK_DEAD == message) screen_print("TTN link dead\n");
-  if (EV_ACK == message) screen_print("ACK received\n");
-  if (EV_PENDING == message) screen_print("Message discarded\n");
-  if (EV_QUEUED == message) screen_print("Message queued\n");
+  if (EV_JOINING == message) Serial.println("Joining TTN...\n");
+  if (EV_JOINED == message) Serial.println("TTN joined!\n");
+  if (EV_JOIN_FAILED == message) Serial.println("TTN join failed\n");
+  if (EV_REJOIN_FAILED == message) Serial.println("TTN rejoin failed\n");
+  if (EV_RESET == message) Serial.println("Reset TTN connection\n");
+  if (EV_LINK_DEAD == message) Serial.println("TTN link dead\n");
+  if (EV_ACK == message) Serial.println("ACK received\n");
+  if (EV_PENDING == message) Serial.println("Message discarded\n");
+  if (EV_QUEUED == message) Serial.println("Message queued\n");
 
   if (EV_TXCOMPLETE == message) {
-    screen_print("Message sent\n");
+    Serial.println("Message sent\n");
     sleep();
   }
 
   if (EV_RESPONSE == message) {
 
-    screen_print("[TTN] Response: ");
+    Serial.println("[TTN] Response: ");
 
     size_t len = ttn_response_len();
     uint8_t data[len];
@@ -126,9 +126,9 @@ void callback(uint8_t message) {
     char buffer[6];
     for (uint8_t i = 0; i < len; i++) {
       snprintf(buffer, sizeof(buffer), "%02X", data[i]);
-      screen_print(buffer);
+      Serial.println(buffer);
     }
-    screen_print("\n");
+    Serial.println("\n");
   }
 }
 
@@ -238,24 +238,24 @@ void setup() {
   DEBUG_MSG(APP_NAME " " APP_VERSION "\n");
 
   // Display
-  screen_setup();
+  //screen_setup();
 
   // Init GPS
   gps_setup();
 
   // Show logo on first boot
   if (0 == count) {
-    screen_print(APP_NAME " " APP_VERSION, 0, 0);
-    screen_show_logo();
-    screen_update();
-    delay(LOGO_DELAY);
+    Serial.printf(APP_NAME " " APP_VERSION, 0, 0);
+    //screen_show_logo();
+    //screen_update();
+    //delay(LOGO_DELAY);
   }
 
   // TTN setup
   if (!ttn_setup()) {
-    screen_print("[ERR] Radio module not found!\n");
+    Serial.println("[ERR] Radio module not found!\n");
     delay(MESSAGE_TO_SLEEP_DELAY);
-    screen_off();
+    //screen_off();
     sleep_forever();
   }
 
@@ -271,7 +271,7 @@ void setup() {
 void loop() {
   gps_loop();
   ttn_loop();
-  screen_loop();
+  //screen_loop();
 
   // Send every SEND_INTERVAL millis
   static uint32_t last = 0;
@@ -284,7 +284,7 @@ void loop() {
       send();
     } else {
       if (first) {
-        screen_print("Waiting GPS lock\n");
+        Serial.println("Waiting GPS lock\n");
         first = false;
       }
       if (millis() > GPS_WAIT_FOR_LOCK) {
